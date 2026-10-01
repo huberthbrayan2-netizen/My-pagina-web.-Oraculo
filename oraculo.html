@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>El Oráculo - Adivina el Profesor</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔮</text></svg>">
+<style>
+:root{--noche:#080413;--media:#160a2c;--perg:#f7edd8;--oro:#f3c75d;--brillo:#ffe79e;--vio:#a86cff;--prof:#3f1d73;--rosa:#ff6ec7;--cristal:rgba(22,10,44,.74)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;color:var(--perg);min-height:100vh;overflow-x:hidden;position:relative;display:flex;align-items:center;justify-content:center;padding:calc(1.2rem + env(safe-area-inset-top,0px)) 1rem calc(1.2rem + env(safe-area-inset-bottom,0px));
+background:radial-gradient(ellipse 900px 550px at 50% 8%,rgba(168,108,255,.3),transparent 70%),radial-gradient(ellipse 700px 420px at 15% 95%,rgba(255,110,199,.12),transparent 60%),radial-gradient(ellipse 600px 400px at 85% 90%,rgba(255,123,0,.13),transparent 60%),radial-gradient(ellipse at 50% 100%,var(--media),var(--noche) 80%)}
+.cielo{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.estrella{position:absolute;background:var(--perg);border-radius:50%;animation:titilar ease-in-out infinite}
+@keyframes titilar{0%,100%{opacity:.1;transform:scale(.8)}50%{opacity:.95;transform:scale(1.4)}}
+.particula{position:absolute;background:var(--oro);border-radius:50%;animation:sube linear infinite}
+@keyframes sube{0%{transform:translateY(0) scale(1);opacity:0}50%{opacity:.7}100%{transform:translateY(-140px) scale(.2);opacity:0}}
+.runa{position:absolute;color:var(--oro);opacity:.16;animation:deriva ease-in-out infinite alternate;user-select:none}
+@keyframes deriva{0%{transform:translateY(0) rotate(-8deg)}100%{transform:translateY(-30px) rotate(10deg)}}
+.fugaz{position:absolute;width:110px;height:2px;background:linear-gradient(90deg,transparent,var(--brillo));border-radius:2px;opacity:0;transform:rotate(-30deg);animation:fugaz 9s ease-in infinite}
+@keyframes fugaz{0%{opacity:0;transform:translate(0,0) rotate(-30deg)}3%{opacity:1}12%{opacity:0;transform:translate(-320px,185px) rotate(-30deg)}100%{opacity:0}}
+.luna{position:fixed;top:calc(18px + env(safe-area-inset-top,0px));right:22px;font-size:2.2rem;z-index:1;text-shadow:0 0 18px rgba(255,231,158,.9);animation:flotar 6s ease-in-out infinite;pointer-events:none}
+.niebla{position:fixed;inset:-10%;z-index:0;background:radial-gradient(ellipse 65% 45% at 20% 80%,rgba(168,108,255,.2),transparent 70%),radial-gradient(ellipse 55% 35% at 80% 20%,rgba(63,29,115,.3),transparent 70%);animation:niebla 25s ease-in-out infinite alternate;pointer-events:none}
+@keyframes niebla{to{transform:translate(-25px,20px)}}
+.marco{position:relative;z-index:2;width:min(94vw,620px);padding:3px;border-radius:30px;background:linear-gradient(135deg,var(--oro),var(--vio),var(--rosa),var(--oro));background-size:300% 300%;animation:borde 8s linear infinite;box-shadow:0 25px 60px rgba(0,0,0,.7),0 0 45px rgba(168,108,255,.3),0 0 18px rgba(243,199,93,.35)}
+@keyframes borde{0%{background-position:0 50%}100%{background-position:300% 50%}}
+.tarjeta{position:relative;background:rgba(22,10,44,.9);isolation:isolate;border-radius:27px;padding:2.6rem 2rem 2.2rem;text-align:center;overflow:hidden}
+.esq{position:absolute;color:var(--oro);font-size:1.3rem;opacity:.75;text-shadow:0 0 10px var(--oro)}
+.esq.a{top:10px;left:14px}.esq.b{top:10px;right:14px}.esq.c{bottom:10px;left:14px}.esq.d{bottom:10px;right:14px}
+.orbe-c{position:relative;width:170px;height:170px;margin:0 auto 1.3rem}
+.anillo{position:absolute;inset:0;border-radius:50%;border:1px dashed rgba(243,199,93,.45);animation:girar 20s linear infinite}
+.anillo.ext{inset:-20px;border:1px solid rgba(168,108,255,.45);animation-duration:28s;animation-direction:reverse}
+.anillo.ext::before,.anillo.ext::after{content:'◆';position:absolute;left:50%;transform:translateX(-50%);color:var(--vio);font-size:.7rem}
+.anillo.ext::before{top:-8px}.anillo.ext::after{bottom:-8px;color:var(--rosa)}
+.anillo.rn{inset:-38px;border:1px dotted rgba(255,110,199,.35);animation-duration:45s}
+@keyframes girar{to{transform:rotate(360deg)}}
+.orbe{position:absolute;inset:14px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fffbf0,var(--oro) 22%,var(--vio) 66%,var(--prof));box-shadow:0 0 45px rgba(243,199,93,.55),0 0 95px rgba(168,108,255,.4),inset -10px -12px 25px rgba(0,0,0,.65);animation:flotar 5s ease-in-out infinite}
+.orbe::after{content:'';position:absolute;top:14%;left:20%;width:26%;height:16%;border-radius:50%;background:radial-gradient(ellipse,rgba(255,255,255,.85),transparent 70%);transform:rotate(-30deg)}
+@keyframes flotar{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes pulso{50%{filter:brightness(1.2) saturate(1.2)}}
+h1{font-family:Georgia,serif;font-size:clamp(2.1rem,7vw,3rem);font-weight:800;letter-spacing:.08em;background:linear-gradient(90deg,var(--perg),var(--brillo),var(--rosa),var(--brillo),var(--perg));background-size:250% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:brillo 6s linear infinite;padding:.1em 0}
+@keyframes brillo{to{background-position:250% center}}
+.sub{margin-top:.8rem;font-size:.98rem;color:rgba(247,237,216,.85);line-height:1.6;font-weight:300}
+.div{position:relative;width:160px;height:1px;background:linear-gradient(90deg,transparent,var(--oro),transparent);margin:1.5rem auto}
+.div::after{content:'✧';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#1a0c33;padding:0 8px;color:var(--oro)}
+.info{display:flex;justify-content:space-between;font-size:.76rem;color:var(--brillo);letter-spacing:.06em;text-transform:uppercase;margin:1.2rem 0 .4rem}
+.fondo{height:8px;background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden;border:1px solid rgba(243,199,93,.25)}
+.relleno{height:100%;width:10%;background:linear-gradient(90deg,var(--vio),var(--rosa),var(--oro));border-radius:10px;transition:width .5s ease;box-shadow:0 0 12px var(--oro)}
+.pregunta{font-family:Georgia,serif;font-size:1.28rem;color:var(--perg);min-height:90px;display:flex;align-items:center;justify-content:center;line-height:1.55;margin-top:.6rem;text-shadow:0 0 14px rgba(168,108,255,.4)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:1.2rem}
+.btn{position:relative;overflow:hidden;background:rgba(243,199,93,.07);color:var(--oro);border:1px solid var(--oro);padding:13px 16px;font-family:Georgia,serif;font-size:.95rem;font-weight:600;letter-spacing:.05em;cursor:pointer;border-radius:14px;transition:all .25s ease;outline:none}
+.btn::before{content:'';position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg)}
+.btn:hover::before{left:130%;transition:left .6s}
+.btn:hover{background:var(--oro);color:var(--noche);box-shadow:0 0 24px rgba(243,199,93,.6);transform:translateY(-2px)}
+.btn:active{transform:scale(.97)}
+.alt{border-color:var(--vio);color:var(--perg);background:rgba(168,108,255,.12)}
+.alt:hover{background:var(--vio);color:#fff;box-shadow:0 0 24px rgba(168,108,255,.6)}
+.neutro{border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.65);background:transparent}
+.inicio{grid-column:span 2;width:100%;padding:16px;font-size:1.15rem;background:linear-gradient(135deg,var(--oro),#c99a22);color:var(--noche);border:none;box-shadow:0 0 26px rgba(243,199,93,.4);animation:latido 2.4s ease-in-out infinite}
+@keyframes latido{50%{box-shadow:0 0 42px rgba(243,199,93,.75)}}
+.hist{margin-top:1.4rem;text-align:left;background:rgba(8,4,19,.55);border:1px solid rgba(243,199,93,.18);border-radius:14px;padding:.9rem 1.1rem;max-height:140px;overflow-y:auto}
+.hist-t{font-size:.75rem;color:var(--oro);font-family:Georgia,serif;letter-spacing:.05em;margin-bottom:.5rem}
+.hi{font-size:.8rem;color:rgba(247,237,216,.72);margin-bottom:.35rem;display:flex;justify-content:space-between;gap:8px;border-bottom:1px dashed rgba(255,255,255,.07);padding-bottom:.2rem}
+.hi b{color:var(--brillo);white-space:nowrap}
+.rev{background:rgba(168,108,255,.14);border:1px solid rgba(243,199,93,.45);border-radius:18px;padding:1.6rem 1.2rem;margin-top:1rem;box-shadow:inset 0 0 24px rgba(168,108,255,.2),0 0 28px rgba(243,199,93,.15);animation:aparece .7s ease}
+@keyframes aparece{from{opacity:0;transform:scale(.85) translateY(14px)}}
+.corona{font-size:2.2rem;animation:flotar 3s ease-in-out infinite}
+.etq{font-size:.78rem;color:var(--oro);font-family:Georgia,serif;text-transform:uppercase;letter-spacing:.1em;margin:.3rem 0}
+.nombre{font-family:Georgia,serif;font-size:1.8rem;font-weight:700;color:var(--brillo);text-shadow:0 0 16px rgba(243,199,93,.6);margin-bottom:.7rem}
+.det{font-size:.93rem;color:rgba(247,237,216,.9);line-height:1.6;font-weight:300}
+.fade{animation:fade .35s ease forwards}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}}
+.conf{position:fixed;top:-20px;z-index:5;pointer-events:none;animation:cae linear forwards}
+@keyframes cae{to{transform:translateY(105vh) rotate(720deg);opacity:.2}}
+.hist::-webkit-scrollbar{width:5px}.hist::-webkit-scrollbar-thumb{background:rgba(243,199,93,.3);border-radius:10px}
+@media(max-width:420px){.tarjeta{padding:2.4rem 1.2rem 2rem}.pregunta{font-size:1.12rem}.luna{font-size:1.6rem}}
+.mw{position:fixed;inset:0;display:grid;place-items:center;z-index:0;pointer-events:none}
+.mw svg{width:min(135vw,920px);height:min(135vw,920px);opacity:.3;animation:girar 140s linear infinite}
+.aurora{position:fixed;inset:-20% -10% 40% -10%;z-index:0;pointer-events:none;background:linear-gradient(110deg,rgba(0,255,200,.09),rgba(168,108,255,.16),rgba(255,110,199,.1),rgba(0,200,255,.08));animation:aur 14s ease-in-out infinite alternate}
+@keyframes aur{0%{transform:translateX(-6%) skewX(-8deg)}100%{transform:translateX(6%) skewX(8deg)}}
+.emo{position:absolute;opacity:.32;animation:deriva ease-in-out infinite alternate}
+.castillo{position:fixed;left:0;right:0;bottom:0;height:150px;width:100%;z-index:0;pointer-events:none}
+.vent{animation:titilar 3s ease-in-out infinite}
+.vela{position:fixed;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:1;display:flex;flex-direction:column;align-items:center;pointer-events:none}
+.vela i{display:block;width:16px;background:linear-gradient(90deg,#d9c9a3,var(--perg),#d9c9a3);border-radius:3px 3px 2px 2px}
+.llama{width:15px;height:28px;margin-bottom:-2px;background:radial-gradient(ellipse at 50% 78%,#fff 0%,var(--brillo) 28%,var(--fuego,#ff7b00) 62%,transparent 70%);border-radius:50% 50% 50% 50%/62% 62% 38% 38%;box-shadow:0 0 28px 10px rgba(255,150,0,.45);animation:llama .35s ease-in-out infinite alternate}
+@keyframes llama{0%{transform:scale(1,1) rotate(-3deg)}100%{transform:scale(.88,1.12) rotate(4deg)}}
+.orbita{position:absolute;inset:-6px;border-radius:50%;animation:girar 9s linear infinite;pointer-events:none}
+.orbita::before{content:'✦';position:absolute;top:-6px;left:50%;color:var(--brillo);text-shadow:0 0 12px var(--oro),0 0 22px var(--rosa);font-size:1rem}
+.flor{margin:.3rem 0 0;color:var(--oro);letter-spacing:.5em;font-size:.95rem;text-shadow:0 0 12px var(--oro);animation:titilar 4s ease-in-out infinite}
+.rastro{position:fixed;z-index:9;pointer-events:none;color:var(--brillo);text-shadow:0 0 10px var(--oro),0 0 18px var(--rosa);animation:rastro .9s ease-out forwards}
+@keyframes rastro{to{opacity:0;transform:translate(var(--dx,0),var(--dy,30px)) scale(.2) rotate(180deg)}}
+.tarjeta::before{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.07) 50%,transparent 60%);transform:translateX(-100%);animation:barrido 7s ease-in-out infinite;pointer-events:none}
+@keyframes barrido{40%,100%{transform:translateX(100%)}}
+@media(max-width:560px){.vela{display:none}}
+</style>
+</head>
+<body>
+<div class="cielo" id="cielo"></div>
+<div class="niebla"></div>
+<div class="luna">🌙</div>
+<div class="aurora"></div>
+<div class="mw" id="mandala"></div>
+<svg class="castillo" viewBox="0 0 1200 150" preserveAspectRatio="none">
+  <defs><linearGradient id="gc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a1255"/><stop offset="1" stop-color="#0b0618"/></linearGradient></defs>
+  <path d="M0 150V105Q120 60 260 100T520 95Q640 70 760 100T1010 90Q1120 70 1200 100V150Z" fill="url(#gc)" opacity=".9"/>
+  <g fill="#120828" stroke="rgba(243,199,93,.35)" stroke-width="1">
+    <rect x="540" y="62" width="120" height="88"/><rect x="520" y="40" width="34" height="110"/><rect x="646" y="40" width="34" height="110"/><rect x="578" y="30" width="44" height="120"/>
+    <path d="M516 40l21-30 21 30zM642 40l21-30 21 30zM574 30l26-34 26 34z"/>
+  </g>
+  <g fill="#ffe79e"><rect class="vent" x="595" y="60" width="10" height="16" rx="5"/><rect class="vent" x="534" y="70" width="6" height="10" rx="3" style="animation-delay:1s"/><rect class="vent" x="660" y="70" width="6" height="10" rx="3" style="animation-delay:2s"/><rect class="vent" x="560" y="105" width="8" height="12" rx="4" style="animation-delay:.5s"/><rect class="vent" x="632" y="105" width="8" height="12" rx="4" style="animation-delay:1.5s"/></g>
+</svg>
+<div class="vela" style="left:3%"><div class="llama"></div><i style="height:78px"></i></div>
+<div class="vela" style="left:7%"><div class="llama" style="animation-delay:.15s"></div><i style="height:52px"></i></div>
+<div class="vela" style="right:3%"><div class="llama" style="animation-delay:.1s"></div><i style="height:88px"></i></div>
+<div class="vela" style="right:7%"><div class="llama" style="animation-delay:.2s"></div><i style="height:58px"></i></div>
+
+<div class="marco"><div class="tarjeta">
+  <span class="esq a">✦</span><span class="esq b">✦</span><span class="esq c">❖</span><span class="esq d">❖</span>
+  <div class="orbe-c"><div class="anillo rn"></div><div class="anillo ext"></div><div class="anillo"></div><div class="orbe"></div></div>
+  <h1>El Oráculo</h1>
+
+  <div id="inicio">
+    <p class="sub">Piensa en uno de tus profesores. Conéctate con las brumas de la sabiduría y responde a las visiones para revelar quién habita en tu mente.</p>
+    <div class="div"></div>
+    <button id="btn-comenzar" class="btn inicio">✨ Iniciar Lectura ✨</button>
+  </div>
+
+  <div id="juego" style="display:none">
+    <div class="info"><span id="turno">Pregunta #1</span><span id="claridad">Claridad: 15%</span></div>
+    <div class="fondo"><div class="relleno" id="barra"></div></div>
+    <div class="pregunta" id="question">Conectando con el plano espiritual...</div>
+    <div class="grid">
+      <button id="btn-yes" class="btn">✔ Sí</button>
+      <button id="btn-no" class="btn alt">✖ No</button>
+      <button id="btn-probably" class="btn alt">❓ Tal vez / De pronto</button>
+      <button id="btn-restart-ingame" class="btn neutro">↺ Reiniciar</button>
+    </div>
+    <div class="hist" id="hist-box" style="display:none"><div class="hist-t">✦ Registro de Visiones</div><div id="hist-lista"></div></div>
+  </div>
+
+  <div id="resultado" style="display:none">
+    <div class="div"></div>
+    <div id="res-contenido"></div>
+    <div style="margin-top:1.6rem"><button id="btn-restart" class="btn inicio">🔮 Consultar de Nuevo</button></div>
+  </div>
+</div></div>
+
+<script>
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function sonido(tipo){
+  try{
+    if(audioCtx.state==='suspended') audioCtx.resume();
+    const o=audioCtx.createOscillator(), g=audioCtx.createGain(), t=audioCtx.currentTime;
+    o.connect(g); g.connect(audioCtx.destination);
+    if(tipo==='clic'){o.type='sine';o.frequency.setValueAtTime(880,t);o.frequency.exponentialRampToValueAtTime(440,t+.14);g.gain.setValueAtTime(.12,t);g.gain.exponentialRampToValueAtTime(.001,t+.14);o.start(t);o.stop(t+.14)}
+    else if(tipo==='inicio'){o.type='triangle';o.frequency.setValueAtTime(280,t);o.frequency.exponentialRampToValueAtTime(700,t+.4);g.gain.setValueAtTime(.16,t);g.gain.exponentialRampToValueAtTime(.001,t+.4);o.start(t);o.stop(t+.4)}
+    else{o.type='sine';[523.25,659.25,783.99,1046.5].forEach((f,i)=>o.frequency.setValueAtTime(f,t+i*.15));g.gain.setValueAtTime(.18,t);g.gain.exponentialRampToValueAtTime(.001,t+.8);o.start(t);o.stop(t+.8)}
+  }catch(e){}
+}
+
+const profesores = [
+  {nombre:"José de la Hoz",genero:"M",materia:"ingles",exp:31,altura:"bajo",estricto:false,tareas:false,tecno:false,viajar:false,tv:false,musica:false,deportes:false,leer:false,grados:["6"],detalle:"Enseña Inglés y Reading en 6°, liberal con los estudiantes y casi no deja tareas."},
+  {nombre:"Leydi Liliana Barrios",genero:"F",materia:"ingles",exp:20,altura:"alta",estricto:true,tareas:false,tecno:true,viajar:true,tv:true,musica:false,deportes:false,leer:false,grados:["9","10","11"],detalle:"Enseña Inglés en grados superiores (9°, 10°, 11°), utiliza tecnología y le gusta viajar."},
+  {nombre:"Sandra Castillo",genero:"F",materia:"sociales",exp:11,altura:"baja",estricto:true,tareas:true,tecno:false,viajar:false,tv:false,musica:false,deportes:true,leer:true,grados:["6","7","8","9","10","11"],detalle:"Enseña Ciencias Sociales a todos los grados, exige respeto y le gusta leer y el deporte."},
+  {nombre:"Miguel Ángel Campo Rodríguez",genero:"M",materia:"otra",exp:5,altura:"media",estricto:false,tareas:true,tecno:false,viajar:false,tv:false,musica:false,deportes:false,leer:false,grados:["9","11"],detalle:"Docente enfocado en los grados noveno y once."},
+  {nombre:"Francisco Manuel Valencia González",genero:"M",materia:"sociales",exp:40,altura:"alto",estricto:true,tareas:false,tecno:false,viajar:false,tv:false,musica:false,deportes:true,leer:false,grados:["8","10","11"],detalle:"Cuenta con 40 años de docencia en Sociales y Cátedra, muy amiguero y deportista."},
+  {nombre:"Yecsabel Sierra Orozco",genero:"F",materia:"espanol",exp:30,altura:"baja",estricto:true,tareas:true,tecno:false,viajar:true,tv:true,musica:false,deportes:false,leer:true,grados:["10","11"],detalle:"Lleva 30 años en Lengua Castellana (10° y 11°), apasionada por los libros y las películas."},
+  {nombre:"Jorge Ospina",genero:"M",materia:"matematicas",exp:25,altura:"alto",estricto:false,tareas:true,tecno:false,viajar:false,tv:true,musica:false,deportes:true,leer:false,grados:["6","7","8","9","10","11"],detalle:"Profesor paciente de Matemáticas y Física, atlético, trota y juega fútbol."},
+  {nombre:"Diana Olivella",genero:"F",materia:"artistica",exp:35,altura:"baja",estricto:true,tareas:true,tecno:false,viajar:false,tv:false,musica:true,deportes:false,leer:false,grados:["10","11"],detalle:"Imparte Artes Plásticas a 10° y 11°, con 35 años de experiencia y amor por la música."},
+  {nombre:"Cristian Rincón",genero:"M",materia:"matematicas",exp:8,altura:"bajo",estricto:true,tareas:true,tecno:false,viajar:false,tv:false,musica:false,deportes:true,leer:true,grados:["8"],detalle:"Profesor de Matemáticas de 8°, le gusta jugar fútbol sala y resolver problemas."},
+  {nombre:"Pedro Medina",genero:"M",materia:"espanol",exp:17,altura:"bajo",estricto:false,tareas:false,tecno:true,viajar:false,tv:false,musica:false,deportes:false,leer:true,grados:["8"],detalle:"Docente de Español en 8°, impulsivo, no deja tareas y revisa el celular."},
+  {nombre:"Alexandra Muñoz",genero:"F",materia:"espanol",exp:15,altura:"alta",estricto:true,tareas:true,tecno:false,viajar:false,tv:false,musica:false,deportes:false,leer:false,grados:["7"],detalle:"Enseña Lengua Castellana en 7°, de contextura media, dedicada a su hogar."},
+  {nombre:"Katy Quiroz",genero:"F",materia:"ingles",exp:25,altura:"baja",estricto:false,tareas:true,tecno:false,viajar:false,tv:true,musica:false,deportes:false,leer:true,grados:["7"],detalle:"Docente amable de Inglés en 7°, le gusta ver novelas turcas y leer."},
+  {nombre:"Osmen Ospina",genero:"M",materia:"lectura",exp:36,altura:"alto",estricto:false,tareas:true,tecno:false,viajar:false,tv:false,musica:true,deportes:false,leer:false,grados:["8","9"],detalle:"Profesor elegante de Lectura Crítica en 8° y 9°, amante de la música y la escritura."},
+  {nombre:"Adalberto Torres",genero:"M",materia:"sociales",exp:15,altura:"alto",estricto:true,tareas:true,tecno:false,viajar:false,tv:false,musica:false,deportes:false,leer:false,grados:["6","7","8","9","10","11"],detalle:"Docente alto y delgado de Sociales, exigente, disfruta compartir en familia."},
+  {nombre:"Lurdes Margarita",genero:"F",materia:"sociales",exp:32,altura:"baja",estricto:false,tareas:true,tecno:false,viajar:false,tv:true,musica:false,deportes:false,leer:true,grados:["6","7"],detalle:"Enseña Sociales en 6° y 7°, muy paciente, le gustan las caricaturas y la televisión."},
+  {nombre:"Welys Ríos",genero:"F",materia:"artistica",exp:3,altura:"baja",estricto:true,tareas:true,tecno:false,viajar:false,tv:true,musica:false,deportes:false,leer:true,grados:["6","7","8"],detalle:"Profesora de Artística y Cultural (6°, 7°, 8°), le apasiona bailar y las manualidades."}
+];
+
+const alto = c => c.altura==="alto"||c.altura==="alta";
+const bajo = c => c.altura==="bajo"||c.altura==="baja";
+const g = n => c => c.grados.includes(n);
+const preguntas = [
+  {id:"mujer",texto:"¿Tu profesor(a) es una mujer?",test:c=>c.genero==="F"},
+  {id:"hombre",texto:"¿Tu profesor(a) es un hombre?",test:c=>c.genero==="M"},
+  {id:"soc",texto:"¿Enseña Ciencias Sociales, Cátedra o Economía?",test:c=>c.materia==="sociales"},
+  {id:"ing",texto:"¿Enseña Inglés o Reading?",test:c=>c.materia==="ingles"},
+  {id:"esp",texto:"¿Enseña Lengua Castellana o Español?",test:c=>c.materia==="espanol"},
+  {id:"mat",texto:"¿Enseña Matemáticas o Física?",test:c=>c.materia==="matematicas"},
+  {id:"art",texto:"¿Enseña Educación Artística y Cultural?",test:c=>c.materia==="artistica"},
+  {id:"lec",texto:"¿Enseña Lectura Crítica?",test:c=>c.materia==="lectura"},
+  {id:"idiomas",texto:"¿Su materia tiene que ver con idiomas o literatura (Inglés, Español)?",test:c=>c.materia==="ingles"||c.materia==="espanol"},
+  {id:"exp30",texto:"¿Lleva 30 años o más ejerciendo la educación?",test:c=>c.exp>=30},
+  {id:"exp25",texto:"¿Tiene 25 o más años de experiencia docente?",test:c=>c.exp>=25},
+  {id:"exp10",texto:"¿Tiene menos de 10 años de experiencia?",test:c=>c.exp<10},
+  {id:"exp1020",texto:"¿Tiene entre 10 y 20 años de experiencia?",test:c=>c.exp>=10&&c.exp<=20},
+  {id:"alta",texto:"¿Es de estatura alta?",test:alto},
+  {id:"baja",texto:"¿Es de estatura bajita?",test:bajo},
+  {id:"media",texto:"¿Es de estatura media (ni alto ni bajito)?",test:c=>c.altura==="media"},
+  {id:"estricto",texto:"¿Se le considera estricto(a) o exigente en el aula?",test:c=>c.estricto},
+  {id:"flexible",texto:"¿Es de trato flexible, amable o liberal con los estudiantes?",test:c=>!c.estricto},
+  {id:"pocatarea",texto:"¿Casi no deja tareas para la casa?",test:c=>!c.tareas},
+  {id:"tarea",texto:"¿Suele dejar tareas para la casa?",test:c=>c.tareas},
+  {id:"tecno",texto:"¿Acostumbra a usar tecnología o revisar el celular?",test:c=>c.tecno},
+  {id:"deportes",texto:"¿En sus pasatiempos destaca hacer deporte o trotar?",test:c=>c.deportes},
+  {id:"leer",texto:"¿Le gusta leer libros en su tiempo libre?",test:c=>c.leer},
+  {id:"tv",texto:"¿Disfruta ver televisión, novelas o películas?",test:c=>c.tv},
+  {id:"musica",texto:"¿Suele escuchar música en sus momentos de descanso?",test:c=>c.musica},
+  {id:"viajar",texto:"¿Le gusta viajar?",test:c=>c.viajar},
+  {id:"g6",texto:"¿Le dicta clases al grado Sexto (6°)?",test:g("6")},
+  {id:"g7",texto:"¿Le dicta clases al grado Séptimo (7°)?",test:g("7")},
+  {id:"g8",texto:"¿Le dicta clases al grado Octavo (8°)?",test:g("8")},
+  {id:"g9",texto:"¿Le dicta clases al grado Noveno (9°)?",test:g("9")},
+  {id:"g10",texto:"¿Le dicta clases al grado Décimo (10°)?",test:g("10")},
+  {id:"g11",texto:"¿Le dicta clases al grado Once (11°)?",test:g("11")},
+  {id:"gsup",texto:"¿Le dicta clases a los grados superiores (10° u 11°)?",test:c=>c.grados.includes("10")||c.grados.includes("11")},
+  {id:"gtodos",texto:"¿Da clases en todos los grados, de 6° a 11°?",test:c=>c.grados.length===6},
+  {id:"gunico",texto:"¿Da clases en un solo grado?",test:c=>c.grados.length===1},
+  {id:"gvarios",texto:"¿Da clases en tres o más grados?",test:c=>c.grados.length>=3}
+];
+
+let candidatos=[], usadas=new Set(), actual=null, turno=1;
+const $ = id => document.getElementById(id);
+
+function iniciar(){
+  candidatos = profesores.map(p=>({...p,puntos:10}));
+  usadas.clear(); turno=1;
+  $('hist-box').style.display='none'; $('hist-lista').innerHTML='';
+  $('inicio').style.display='none'; $('resultado').style.display='none'; $('juego').style.display='block';
+  siguiente();
+}
+
+function mejorPregunta(){
+  let vivos = candidatos.filter(c=>c.puntos>3);
+  if(!vivos.length) vivos = candidatos;
+  let mejor=Infinity, empate=[];
+  for(const p of preguntas){
+    if(usadas.has(p.id)) continue;
+    const si = vivos.filter(p.test).length;
+    if(si===0||si===vivos.length) continue; // pregunta inútil: no separa a nadie
+    const d = Math.abs(vivos.length/2 - si);
+    if(d<mejor){mejor=d;empate=[p]} else if(d===mejor) empate.push(p);
+  }
+  return empate.length ? empate[Math.floor(Math.random()*empate.length)] : null;
+}
+
+function confeti(){
+  const col=['#f3c75d','#ffe79e','#a86cff','#ff6ec7','#fff'];
+  for(let i=0;i<60;i++){
+    const d=document.createElement('div'); d.className='conf';
+    d.style.left=Math.random()*100+'vw'; d.style.width=(6+Math.random()*6)+'px'; d.style.height=(10+Math.random()*8)+'px';
+    d.style.background=col[i%col.length]; d.style.animationDuration=(2+Math.random()*2.5)+'s'; d.style.animationDelay=(Math.random()*.8)+'s';
+    document.body.appendChild(d); setTimeout(()=>d.remove(),5500);
+  }
+}
+
+function revelar(etq,p){
+  sonido('victoria'); confeti();
+  $('juego').style.display='none'; $('resultado').style.display='block';
+  $('res-contenido').innerHTML=`<div class="rev"><div class="corona">👑</div><div class="etq">✦ ${etq} ✦</div><div class="nombre">${p.nombre}</div><div class="det">${p.detalle}</div></div>`;
+}
+
+function siguiente(){
+  candidatos.sort((a,b)=>b.puntos-a.puntos);
+  const [p1,p2]=candidatos;
+  const claridad=Math.min(100,Math.max(5,Math.round(p1.puntos/16*100)));
+  $('claridad').innerText=`Claridad: ${claridad}%`; $('barra').style.width=claridad+'%';
+
+  if(p1.puntos>=14 && p1.puntos-p2.puntos>=4) return revelar('Visión Confirmada',p1);
+  actual = mejorPregunta();
+  if(!actual || turno>20) return revelar('El Oráculo Revela',p1);
+
+  usadas.add(actual.id);
+  $('turno').innerText=`Pregunta #${turno}`;
+  const q=$('question'); q.classList.remove('fade'); void q.offsetWidth; q.classList.add('fade'); q.innerText=actual.texto;
+}
+
+function responder(tipo){
+  sonido('clic');
+  const txt={si:'Sí',no:'No',talvez:'Tal vez'}[tipo];
+  $('hist-box').style.display='block';
+  const it=document.createElement('div'); it.className='hi';
+  it.innerHTML=`<div>• ${actual.texto}</div><b>${txt}</b>`;
+  $('hist-lista').appendChild(it); $('hist-box').scrollTop=$('hist-box').scrollHeight;
+
+  for(const c of candidatos){
+    const cumple=actual.test(c);
+    if(tipo==='si') c.puntos += cumple?3:-3;
+    else if(tipo==='no') c.puntos += cumple?-3:3;
+    else if(cumple) c.puntos += 1;
+  }
+  turno++; siguiente();
+}
+
+$('btn-comenzar').onclick=()=>{sonido('inicio');iniciar()};
+$('btn-restart').onclick=()=>{sonido('inicio');iniciar()};
+$('btn-yes').onclick=()=>responder('si');
+$('btn-no').onclick=()=>responder('no');
+$('btn-probably').onclick=()=>responder('talvez');
+$('btn-restart-ingame').onclick=()=>{sonido('clic');$('juego').style.display='none';$('inicio').style.display='block'};
+
+// Decoración de fondo
+const cielo=$('cielo'), R=Math.random;
+for(let i=0;i<100;i++){
+  const e=document.createElement('div'),t=R()*2.2+.5;
+  e.className='estrella'; e.style.cssText=`width:${t}px;height:${t}px;top:${R()*100}vh;left:${R()*100}vw;animation-delay:${R()*4}s;animation-duration:${2+R()*3}s`;
+  cielo.appendChild(e);
+}
+for(let i=0;i<24;i++){
+  const p=document.createElement('div'),t=R()*3+1.5;
+  p.className='particula'; p.style.cssText=`width:${t}px;height:${t}px;top:${80+R()*20}vh;left:${R()*100}vw;animation-delay:${R()*6}s;animation-duration:${6+R()*6}s`;
+  cielo.appendChild(p);
+}
+const runas=['✦','☾','✧','ᚠ','ᛉ','ᚱ','☆','❖','ᛟ','⚝'];
+for(let i=0;i<16;i++){
+  const r=document.createElement('div');
+  r.className='runa'; r.textContent=runas[i%runas.length];
+  r.style.cssText=`font-size:${16+R()*26}px;top:${R()*95}vh;left:${R()*95}vw;animation-delay:${R()*5}s;animation-duration:${6+R()*6}s`;
+  cielo.appendChild(r);
+}
+for(let i=0;i<3;i++){
+  const f=document.createElement('div');
+  f.className='fugaz'; f.style.cssText=`top:${R()*35}vh;left:${60+R()*35}vw;animation-delay:${i*3+R()*3}s`;
+  cielo.appendChild(f);
+}
+// Mandala mágico generado
+(()=>{
+  let s='<svg viewBox="-200 -200 400 400" fill="none" stroke="#f3c75d" stroke-width=".7">';
+  [190,170,120,80,40].forEach((r,i)=>s+=`<circle r="${r}" ${i%2?'stroke-dasharray="3 5"':''}/>`);
+  for(let i=0;i<12;i++){const a=i*30;s+=`<g transform="rotate(${a})"><line y1="-40" y2="-190"/><path d="M0 -120 L12 -145 L0 -170 L-12 -145Z" stroke="#a86cff"/><circle cy="-182" r="4" fill="#ff6ec7" stroke="none"/></g>`}
+  for(let k=0;k<2;k++)s+=`<polygon stroke="#ffe79e" points="${[0,1,2].map(j=>{const a=(j*120+k*60-90)*Math.PI/180;return (120*Math.cos(a)).toFixed(1)+','+(120*Math.sin(a)).toFixed(1)}).join(' ')}"/>`;
+  $('mandala').innerHTML=s+'</svg>';
+})();
+
+// Emojis escolares flotantes
+['📚','✏️','🎓','🦉','🔮','📖','🪄','⭐','🎒','🧪','📐','🌟','🦋','💫'].forEach((e,i)=>{
+  const d=document.createElement('div'); d.className='emo'; d.textContent=e;
+  d.style.cssText=`font-size:${20+R()*22}px;top:${R()*90}vh;left:${R()*94}vw;animation-delay:${R()*5}s;animation-duration:${5+R()*6}s`;
+  cielo.appendChild(d);
+});
+
+// Estrellas orbitando el orbe + florituras
+[[0,9],[-3,13],[-6,17]].forEach(([d,t],i)=>{
+  const o=document.createElement('div'); o.className='orbita';
+  o.style.cssText=`inset:${-6-i*12}px;animation-duration:${t}s;animation-delay:${d}s${i%2?';animation-direction:reverse':''}`;
+  document.querySelector('.orbe-c').appendChild(o);
+});
+const fl=document.createElement('div'); fl.className='flor'; fl.textContent='❦ ✦ ❦'; document.querySelector('h1').after(fl);
+
+// Estela mágica al mover el cursor/dedo
+let ultimo=0;
+function chispa(x,y,n=1,burst=false){
+  for(let i=0;i<n;i++){
+    const c=document.createElement('span'); c.className='rastro';
+    c.textContent=['✦','✧','✨','⋆'][Math.floor(R()*4)];
+    c.style.left=x+'px'; c.style.top=y+'px'; c.style.fontSize=(10+R()*12)+'px';
+    c.style.setProperty('--dx',(burst?(R()-.5)*160:(R()-.5)*40)+'px');
+    c.style.setProperty('--dy',(burst?(R()-.5)*160:20+R()*30)+'px');
+    document.body.appendChild(c); setTimeout(()=>c.remove(),900);
+  }
+}
+['mousemove','touchmove'].forEach(ev=>addEventListener(ev,e=>{
+  const n=Date.now(); if(n-ultimo<45) return; ultimo=n;
+  const p=e.touches?e.touches[0]:e; chispa(p.clientX,p.clientY);
+},{passive:true}));
+document.addEventListener('click',e=>{ if(e.target.closest('.btn')) chispa(e.clientX,e.clientY,12,true) });
+</script>
+</body>
+</html>
